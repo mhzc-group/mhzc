@@ -1,0 +1,15 @@
+spring:
+  profiles:
+    active: db
+  messages:
+    encoding: UTF-8
+
+#mybatis:
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#logging:
+#  level:
+#    root:  INFO
+#    org.springframework:  INFO
+#    org.mybatis:  INFO
+#    com.beauty.mhzc.db.dao:  INFO

@@ -1,0 +1,12 @@
+spring:
+  profiles:
+    active: core, db
+  messages:
+    encoding: UTF-8
+
+logging:
+  level:
+    root:  info
+    org.springframework:  info
+    org.mybatis:  info
+    com.beauty.mhzc.core:  info
