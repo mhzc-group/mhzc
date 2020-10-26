@@ -2,6 +2,7 @@ package com.beauty.mhzc.admin.web;
 
 import com.beauty.mhzc.admin.annotation.RequiresPermissionsDesc;
 import com.beauty.mhzc.admin.dto.Select2;
+import com.beauty.mhzc.admin.service.LogHelper;
 import com.beauty.mhzc.core.util.ResponseUtil;
 import com.beauty.mhzc.core.validator.Order;
 import com.beauty.mhzc.core.validator.Sort;
@@ -16,7 +17,9 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.models.auth.In;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,11 +46,12 @@ public class MallManagerController {
     @Autowired
     private MallManagerService mallManagerService;
 
-//    @Autowired
-//    private AdminMallServiceImpl adminMallService;
+    @Autowired
+    private LogHelper logHelper;
+
 
     @RequiresPermissions("admin:mall-manager:select2")
-    @RequiresPermissionsDesc(menu = {"商城商户关系管理", "商城商户关系管理"}, button = "查询")
+    @RequiresPermissionsDesc(menu = {"商城商户关系管理", "商城商户关系管理"}, button = "查询下拉")
     @GetMapping("/select2")
     @ApiOperation(value = "获取商户列表", notes = "获取商户列表(排除管理员)")
     @ApiImplicitParams({
@@ -98,6 +102,9 @@ public class MallManagerController {
         })
      @Transactional(propagation = Propagation.REQUIRED)
      public Object updateByMallId (String mallId, @RequestBody Integer[] managerIds){
+         //获取当前登陆用户信息
+         Subject currentUser = SecurityUtils.getSubject();
+         Manager currentAdmin= (Manager) currentUser.getPrincipal();
         //删除此商城与商户的所有关系
          mallManagerService.deleteByMallId(mallId);
          //建立商城与商户关系
@@ -111,20 +118,27 @@ public class MallManagerController {
              list.add(mallManager);
          }
          mallManagerService.saveBatch(list);
+         logHelper.logAuthSucceed("更改商城与商户关系", currentAdmin.getUsername());
+
          return ResponseUtil.ok();
     }
     @RequiresPermissions("admin:mall-manager:deleteByMallId")
     @RequiresPermissionsDesc(menu = {"商城商户关系管理", "商城商户关系管理"}, button = "删除")
-    @DeleteMapping("/deleteByMallId")
+    @PostMapping("/deleteByMallId")
     @ApiOperation(value = "删除商城与商户关系", notes = "删除商城与商户关系")
     @ApiImplicitParam(name = "mallId", value = "商城id", required = true, defaultValue = "", dataType = "string", paramType = "query")
     @Transactional(propagation = Propagation.REQUIRED)
     public Object deleteByMallId (String mallId){
+        //获取当前登陆用户信息
+        Subject currentUser = SecurityUtils.getSubject();
+        Manager currentAdmin= (Manager) currentUser.getPrincipal();
         if (StringUtils.isEmpty(mallId)) {
             return ResponseUtil.badArgument();
         }
         //删除此商城与商户的所有关系
         mallManagerService.deleteByMallId(mallId);
+        logHelper.logAuthSucceed("删除此商城与商户的所有关系", currentAdmin.getUsername());
+
         return ResponseUtil.ok();
     }
 
