@@ -88,7 +88,6 @@ public class MallController {
         Subject currentUser = SecurityUtils.getSubject();
         currentAdmin= (Manager) currentUser.getPrincipal();
         //添加商城
-//        String id = mallService.save(mall);
         mall.setCreateBy(currentAdmin.getUsername());
         String id = adminMallServiceImpl.save(mall);
         //关联商城与商户
@@ -121,6 +120,9 @@ public class MallController {
     @ApiOperation(value = "商城修改", notes = "商城修改")
     //TODO 使用validate与bindingResult 进行参数验证
     public Object update(Mall mall){
+        Subject currentUser = SecurityUtils.getSubject();
+        currentAdmin= (Manager) currentUser.getPrincipal();
+        mall.setUpdateBy(currentAdmin.getUsername());
 //        init();
         String anotherAdminId = mall.getId();
         if (anotherAdminId == null) {
