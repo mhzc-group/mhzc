@@ -14,7 +14,7 @@ import java.util.List;
 
 @Service
 public class AdminService {
-    private final Manager.Column[] result = new Manager.Column[]{Manager.Column.id, Manager.Column.username, Manager.Column.avatar, Manager.Column.roleIds};
+    private final Manager.Column[] result = new Manager.Column[]{Manager.Column.id, Manager.Column.username,Manager.Column.nickName,Manager.Column.phone, Manager.Column.avatar, Manager.Column.roleIds};
     @Resource
     private ManagerMapper adminMapper;
 
@@ -41,7 +41,7 @@ public class AdminService {
         }
 
         PageHelper.startPage(page, limit);
-        return adminMapper.selectByExampleSelective(example, result);
+        return adminMapper.selectByExampleSelective(example);
     }
 
 
@@ -80,7 +80,7 @@ public class AdminService {
     }
 
     public Manager findById(Integer id) {
-        return adminMapper.selectByPrimaryKeySelective(id, result);
+        return adminMapper.selectByPrimaryKeySelective(id);
     }
 
     public List<Manager> all() {
