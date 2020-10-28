@@ -59,7 +59,7 @@ public class AdminMallServiceImpl implements MallService {
         if (!StringUtils.isEmpty(name)) {
             criteria.andMallNameLike("%" + name + "%");
         }
-        criteria.andDeletedEqualTo(false);
+//        criteria.andDeletedEqualTo(false);
         if (!StringUtils.isEmpty(sort) && !StringUtils.isEmpty(order)) {
             example.setOrderByClause(sort + " " + order);
         }

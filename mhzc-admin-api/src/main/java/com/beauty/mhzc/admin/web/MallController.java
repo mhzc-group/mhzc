@@ -2,6 +2,7 @@ package com.beauty.mhzc.admin.web;
 
 import com.beauty.mhzc.admin.annotation.RequiresPermissionsDesc;
 import com.beauty.mhzc.admin.service.LogHelper;
+import com.beauty.mhzc.admin.vo.MallVO;
 import com.beauty.mhzc.core.validator.Order;
 import com.beauty.mhzc.core.validator.Sort;
 import com.beauty.mhzc.db.enums.ConstantEnums;
@@ -9,6 +10,7 @@ import com.beauty.mhzc.core.util.ResponseUtil;
 import com.beauty.mhzc.db.domain.Mall;
 import com.beauty.mhzc.db.domain.MallManager;
 import com.beauty.mhzc.db.domain.Manager;
+import com.beauty.mhzc.db.service.AdminService;
 import com.beauty.mhzc.db.service.MallManagerService;
 import com.beauty.mhzc.db.service.MallService;
 import com.beauty.mhzc.db.service.impl.AdminMallServiceImpl;
@@ -21,14 +23,12 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -57,7 +57,8 @@ public class MallController {
     private AdminMallServiceImpl adminMallServiceImpl;
     @Autowired
     private LogHelper logHelper;
-
+    @Autowired
+    private AdminService adminService;
 
     private void init(){
         //获取当前登陆用户信息
@@ -161,7 +162,7 @@ public class MallController {
 
     @RequiresPermissions("admin:mall:list")
     @RequiresPermissionsDesc(menu = {"商城管理", "商城管理"}, button = "查询")
-    @PostMapping("/list")
+    @GetMapping("/list")
     @ApiOperation(value = "商城列表查询", notes = "商城列表查询")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "name", value = "商城名称", required = false, defaultValue = "", dataType = "string", paramType = "query"),
@@ -175,16 +176,38 @@ public class MallController {
                        @RequestParam(defaultValue = "10") Integer limit,
                        @Sort @RequestParam(defaultValue = "create_on") String sort,
                        @Order @RequestParam(defaultValue = "desc") String order){
+        List<MallVO> mallVOList=new ArrayList<>();
         init();
         Integer managerId=currentAdmin.getId();
         //获取登陆人员关联的商城
         List<MallManager> list = mallManagerService.querySelectiveByManagerId(managerId);
-        List<String > mallIds=new ArrayList<>();
         if(list.size()>0){
-            mallIds=list.stream().map(MallManager::getMallId).collect(Collectors.toList());
+            List<String > mallIds=list.stream().map(MallManager::getMallId).collect(Collectors.toList());
+            List<Mall> malls = mallService.querySelective(name, page, limit, sort, order, mallIds);
+            //获取全部商户集合
+            List<Manager> managers = adminService.all();
+            //获取全部商城商户关联关系集合
+            List<MallManager> mallManagers = mallManagerService.queryAll();
+            for (Mall mall:malls){
+                MallVO mallVO=new MallVO();
+                BeanUtils.copyProperties(mall,mallVO);
+                String mallId = mall.getId();
+                List<Integer> collect = mallManagers.stream()
+                        .filter(x -> x.getMallId().equals(mallId))
+                        .map(MallManager::getManagerId)
+                        .collect(Collectors.toList());
+                if(collect.size()>0){
+                    List<String> collect1 = managers.stream()
+                            .filter(x -> collect.contains(x.getId()))
+                            .map(Manager::getNickName)
+                            .collect(Collectors.toList());
+                    mallVO.setManagerNames(collect1);
+                }
+                mallVOList.add(mallVO);
+            }
         }
-        List<Mall> malls = mallService.querySelective(name, page, limit, sort, order, mallIds);
-        return ResponseUtil.okList(malls);
+
+        return ResponseUtil.okList(mallVOList);
     }
 
     /**

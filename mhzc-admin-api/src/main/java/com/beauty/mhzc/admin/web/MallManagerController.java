@@ -55,14 +55,15 @@ public class MallManagerController {
     @GetMapping("/select2")
     @ApiOperation(value = "获取商户列表", notes = "获取商户列表(排除管理员)")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "mallId", value = "商城id,获取商城关联商户", required = false, defaultValue = "", dataType = "string", paramType = "query"),
+//            @ApiImplicitParam(name = "mallId", value = "商城id,获取商城关联商户", required = false, defaultValue = "", dataType = "string", paramType = "query"),
             @ApiImplicitParam(name = "name", value = "商户名称", required = false, defaultValue = "", dataType = "string", paramType = "query"),
             @ApiImplicitParam(name = "page", value = "页数", required = false, defaultValue = "1", dataType = "integer", paramType = "query"),
             @ApiImplicitParam(name = "limit", value = "每页条数", required = false, defaultValue = "10",dataType = "integer", paramType = "query"),
             @ApiImplicitParam(name = "sort", value = "排序字段", required = false, defaultValue = "add_time",dataType = "string", paramType = "query"),
             @ApiImplicitParam(name = "order", value = "排序类型", required = false, defaultValue = "desc",dataType = "string", paramType = "query")
     })
-    public Object select2(String mallId,
+    public Object select2(
+//                    String mallId,
                           String name,
                           @RequestParam(defaultValue = "1") Integer page,
                           @RequestParam(defaultValue = "10") Integer limit,
@@ -72,14 +73,14 @@ public class MallManagerController {
         List<Manager> adminList = adminService.queryMerchantSelective(name, page, limit, sort, order);
         List<Select2> select2List=new ArrayList<>();
         if(adminList.size()>0){
-            if (mallId != null &&"".equals(mallId)) {
-                //获取商城关联的商户
-                List<MallManager> list = mallManagerService.querySelectiveByMallId(mallId);
-                if(list.size()>0){
-                    List<Integer> managerIdList=list.stream().map(MallManager::getManagerId).collect(Collectors.toList());
-                    adminList=adminList.stream().filter(x->managerIdList.contains(x.getId())).collect(Collectors.toList());
-                }
-            }
+//            if (mallId != null &&"".equals(mallId)) {
+//                //获取商城关联的商户
+//                List<MallManager> list = mallManagerService.querySelectiveByMallId(mallId);
+//                if(list.size()>0){
+//                    List<Integer> managerIdList=list.stream().map(MallManager::getManagerId).collect(Collectors.toList());
+//                    adminList=adminList.stream().filter(x->managerIdList.contains(x.getId())).collect(Collectors.toList());
+//                }
+//            }
 
             select2List=adminList.stream().map(x->{
                 Select2 select2=new Select2();

@@ -61,4 +61,13 @@ public class MallManagerService {
         }
         return mallManagerMapper.deleteByExample(example);
     }
+
+    /**
+     * 查询全部关联关系
+     * @return
+     */
+    public List<MallManager> queryAll(){
+        MallManagerExample example=new MallManagerExample();
+        return mallManagerMapper.selectByExample(example);
+    }
 }
