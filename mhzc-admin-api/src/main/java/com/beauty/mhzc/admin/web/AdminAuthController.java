@@ -92,6 +92,7 @@ public class AdminAuthController {
         Map<Object, Object> result = new HashMap<Object, Object>();
         result.put("token", currentUser.getSession().getId());
         result.put("adminInfo", adminInfo);
+        result.put("type", admin.getType());
         return ResponseUtil.ok(result);
     }
 
