@@ -132,6 +132,8 @@ public class MallController {
 //        if (mallService.modifyById(mall) == 0) {
 //            return ResponseUtil.updatedDataFailed();
 //        }
+        mall.setCreateBy(null);
+        mall.setCreateOn(null);
         if (adminMallServiceImpl.modifyById(mall) == 0) {
             return ResponseUtil.updatedDataFailed();
         }
@@ -181,31 +183,33 @@ public class MallController {
         Integer managerId=currentAdmin.getId();
         //获取登陆人员关联的商城
         List<MallManager> list = mallManagerService.querySelectiveByManagerId(managerId);
+        List<String > mallIds=new ArrayList<>();
         if(list.size()>0){
-            List<String > mallIds=list.stream().map(MallManager::getMallId).collect(Collectors.toList());
-            List<Mall> malls = mallService.querySelective(name, page, limit, sort, order, mallIds);
-            //获取全部商户集合
-            List<Manager> managers = adminService.all();
-            //获取全部商城商户关联关系集合
-            List<MallManager> mallManagers = mallManagerService.queryAll();
-            for (Mall mall:malls){
-                MallVO mallVO=new MallVO();
-                BeanUtils.copyProperties(mall,mallVO);
-                String mallId = mall.getId();
-                List<Integer> collect = mallManagers.stream()
-                        .filter(x -> x.getMallId().equals(mallId))
-                        .map(MallManager::getManagerId)
-                        .collect(Collectors.toList());
-                if(collect.size()>0){
-                    List<String> collect1 = managers.stream()
-                            .filter(x -> collect.contains(x.getId()))
-                            .map(Manager::getNickName)
-                            .collect(Collectors.toList());
-                    mallVO.setManagerNames(collect1);
-                }
-                mallVOList.add(mallVO);
-            }
+            mallIds=list.stream().map(MallManager::getMallId).collect(Collectors.toList());
         }
+        List<Mall> malls = mallService.querySelective(name, page, limit, sort, order, mallIds);
+        //获取全部商户集合
+        List<Manager> managers = adminService.all();
+        //获取全部商城商户关联关系集合
+        List<MallManager> mallManagers = mallManagerService.queryAll();
+        for (Mall mall:malls){
+            MallVO mallVO=new MallVO();
+            BeanUtils.copyProperties(mall,mallVO);
+            String mallId = mall.getId();
+            List<Integer> collect = mallManagers.stream()
+                    .filter(x -> x.getMallId().equals(mallId))
+                    .map(MallManager::getManagerId)
+                    .collect(Collectors.toList());
+            if(collect.size()>0){
+                List<String> collect1 = managers.stream()
+                        .filter(x -> collect.contains(x.getId()))
+                        .map(Manager::getNickName)
+                        .collect(Collectors.toList());
+                mallVO.setManagerNames(collect1);
+            }
+            mallVOList.add(mallVO);
+        }
+
 
         return ResponseUtil.okList(mallVOList);
     }

@@ -43,9 +43,9 @@
 
         <!--数据库连接信息-->
         <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
-                        connectionURL="jdbc:mysql://127.0.0.1:3306/mhzc_v1?useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=UTC&amp;verifyServerCertificate=false&amp;useSSL=false&amp;nullCatalogMeansCurrent=true"
-                        userId="root"
-                        password="123456"/>
+                        connectionURL="jdbc:mysql://39.97.114.146:3307/mhzc_v1?useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=UTC&amp;verifyServerCertificate=false&amp;useSSL=false&amp;nullCatalogMeansCurrent=true"
+                        userId="zhx"
+                        password="zhx123456"/>
 
         <javaTypeResolver>
             <property name="useJSR310Types" value="true"/>
@@ -62,11 +62,11 @@
 <!--        <table tableName="litemall_address">-->
 <!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
 <!--        </table>-->
-        <table tableName="manager">
-            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-            <columnOverride column="role_ids" javaType="java.lang.Integer[]"
-                            typeHandler="com.beauty.mhzc.db.mybatis.JsonIntegerArrayTypeHandler"/>
-        </table>
+<!--        <table tableName="manager">-->
+<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+<!--            <columnOverride column="role_ids" javaType="java.lang.Integer[]"-->
+<!--                            typeHandler="com.beauty.mhzc.db.mybatis.JsonIntegerArrayTypeHandler"/>-->
+<!--        </table>-->
 <!--        <table tableName="litemall_brand">-->
 <!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
 <!--        </table>-->
@@ -180,6 +180,9 @@
 <!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
 <!--        </table>-->
 <!--        <table tableName="applet">-->
+<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+<!--        </table>-->
+<!--        <table tableName="storage">-->
 <!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
 <!--        </table>-->
 <!--        <table tableName="litemall_notice">-->

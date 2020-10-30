@@ -1,4 +1,4 @@
-litemall:
+mhzc:
   # 开发者应该设置成自己的wx相关信息
   wx:
     app-id: wxa5b486c6b918ecfb
@@ -87,7 +87,8 @@ litemall:
     local:
       storagePath: storage
       # 这个地方应该是wx模块的WxStorageController的fetch方法对应的地址
-      address: http://localhost:8080/wx/storage/fetch/
+      address:
+#      address: http://localhost:8080/wx/storage/fetch/
     # 阿里云对象存储配置信息
     aliyun:
       endpoint: oss-cn-shenzhen.aliyuncs.com

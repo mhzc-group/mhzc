@@ -90,23 +90,23 @@
 //
 //        // 测试获取application-core.yml配置信息
 //        infos.put(SystemInfoPrinter.CREATE_PART_COPPER + 1, "模块状态");
-//        infos.put("邮件", environment.getProperty("litemall.notify.mail.enable"));
-//        infos.put("短信", environment.getProperty("litemall.notify.sms.enable"));
-//        infos.put("模版消息", environment.getProperty("litemall.notify.wx.enable"));
-//        infos.put("快递信息", environment.getProperty("litemall.express.enable"));
-//        infos.put("快递鸟ID", environment.getProperty("litemall.express.appId"));
-//        infos.put("对象存储", environment.getProperty("litemall.storage.active"));
-//        infos.put("本地对象存储路径", environment.getProperty("litemall.storage.local.storagePath"));
-//        infos.put("本地对象访问地址", environment.getProperty("litemall.storage.local.address"));
-//        infos.put("本地对象访问端口", environment.getProperty("litemall.storage.local.port"));
+//        infos.put("邮件", environment.getProperty("mhzc.notify.mail.enable"));
+//        infos.put("短信", environment.getProperty("mhzc.notify.sms.enable"));
+//        infos.put("模版消息", environment.getProperty("mhzc.notify.wx.enable"));
+//        infos.put("快递信息", environment.getProperty("mhzc.express.enable"));
+//        infos.put("快递鸟ID", environment.getProperty("mhzc.express.appId"));
+//        infos.put("对象存储", environment.getProperty("mhzc.storage.active"));
+//        infos.put("本地对象存储路径", environment.getProperty("mhzc.storage.local.storagePath"));
+//        infos.put("本地对象访问地址", environment.getProperty("mhzc.storage.local.address"));
+//        infos.put("本地对象访问端口", environment.getProperty("mhzc.storage.local.port"));
 //
 //        // 微信相关信息
 //        infos.put(SystemInfoPrinter.CREATE_PART_COPPER + 2, "微信相关");
-//        infos.put("微信APP KEY", environment.getProperty("litemall.wx.app-id"));
-//        infos.put("微信APP-SECRET", environment.getProperty("litemall.wx.app-secret"));
-//        infos.put("微信支付MCH-ID", environment.getProperty("litemall.wx.mch-id"));
-//        infos.put("微信支付MCH-KEY", environment.getProperty("litemall.wx.mch-key"));
-//        infos.put("微信支付通知地址", environment.getProperty("litemall.wx.notify-url"));
+//        infos.put("微信APP KEY", environment.getProperty("mhzc.wx.app-id"));
+//        infos.put("微信APP-SECRET", environment.getProperty("mhzc.wx.app-secret"));
+//        infos.put("微信支付MCH-ID", environment.getProperty("mhzc.wx.mch-id"));
+//        infos.put("微信支付MCH-KEY", environment.getProperty("mhzc.wx.mch-key"));
+//        infos.put("微信支付通知地址", environment.getProperty("mhzc.wx.notify-url"));
 //
 //        //测试获取System表配置信息
 //        infos.put(SystemInfoPrinter.CREATE_PART_COPPER + 3, "系统设置");
