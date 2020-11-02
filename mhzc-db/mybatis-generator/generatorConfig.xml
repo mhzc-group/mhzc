@@ -179,9 +179,9 @@
 <!--        <table tableName="mall_manager">-->
 <!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
 <!--        </table>-->
-        <table tableName="applet">
-            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-        </table>
+<!--        <table tableName="applet">-->
+<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+<!--        </table>-->
 <!--        <table tableName="storage">-->
 <!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
 <!--        </table>-->
@@ -191,6 +191,12 @@
 <!--        <table tableName="litemall_notice_admin">-->
 <!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
 <!--        </table>-->
+        <table tableName="material">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="material_storage">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
 <!--        <table tableName="litemall_aftersale">-->
 <!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
 <!--            <columnOverride column="pictures" javaType="java.lang.String[]"-->
