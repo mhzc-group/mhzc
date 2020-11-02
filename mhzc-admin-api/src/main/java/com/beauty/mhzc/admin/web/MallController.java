@@ -142,25 +142,43 @@ public class MallController {
     }
 
     /**
-     * 商城删除
+     * 商城逻辑删除
      * @param id
      * @return
      */
-    @RequiresPermissions("admin:mall:delete")
-    @RequiresPermissionsDesc(menu = {"商城管理", "商城管理"}, button = "删除")
-    @PostMapping("/delete")
-    @ApiOperation(value = "商城删除", notes = "商城删除")
-    public Object delete(String id){
+    @RequiresPermissions("admin:mall:logicalDelete")
+    @RequiresPermissionsDesc(menu = {"商城管理", "商城管理"}, button = "逻辑删除")
+    @PostMapping("/logicalDelete")
+    @ApiOperation(value = "商城逻辑删除", notes = "商城逻辑删除")
+    public Object logicalDele(String id){
 //        init();
         if (id == null||"".equals(id.trim())) {
             return ResponseUtil.badArgument();
         }
         //逻辑删除
         adminMallServiceImpl.logicalDeleteById(id);
-        logHelper.logAuthSucceed("删除商城", currentAdmin.getUsername());
+        logHelper.logAuthSucceed("逻辑删除商城", currentAdmin.getUsername());
         return ResponseUtil.ok();
     }
 
+    /**
+     * 商城物理删除
+     * @param id
+     * @return
+     */
+    @RequiresPermissions("admin:mall:delete")
+    @RequiresPermissionsDesc(menu = {"商城管理", "商城管理"}, button = "物理删除")
+    @PostMapping("/delete")
+    @ApiOperation(value = "商城物理删除", notes = "商城物理删除")
+    public Object delete(String id){
+        if (id == null||"".equals(id.trim())) {
+            return ResponseUtil.badArgument();
+        }
+        //删除
+        adminMallServiceImpl.logicalDeleteById(id);
+        logHelper.logAuthSucceed("物理删除商城", currentAdmin.getUsername());
+        return ResponseUtil.ok();
+    }
 
     @RequiresPermissions("admin:mall:list")
     @RequiresPermissionsDesc(menu = {"商城管理", "商城管理"}, button = "查询")

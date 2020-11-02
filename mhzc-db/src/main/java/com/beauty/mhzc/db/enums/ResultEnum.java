@@ -6,7 +6,7 @@ import lombok.Getter;
 public enum ResultEnum {
     FAILURE(-1, "失败"),
     SUCCESS(200, "成功"),
-    PARAMETER_CANNOT_BE_EMPTY  (-100,"参数不能为空"),
+    PARAMETER_CANNOT_BE_EMPTY  (402,"参数不能为空"),
   ;
   private Integer code;
   private String msg;
@@ -15,4 +15,6 @@ public enum ResultEnum {
     this.code = code;
     this.msg = msg;
   }
+
+
 }

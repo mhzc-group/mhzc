@@ -179,9 +179,9 @@
 <!--        <table tableName="mall_manager">-->
 <!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
 <!--        </table>-->
-<!--        <table tableName="applet">-->
-<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-<!--        </table>-->
+        <table tableName="applet">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
 <!--        <table tableName="storage">-->
 <!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
 <!--        </table>-->

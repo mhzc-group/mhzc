@@ -17,6 +17,8 @@ public interface MallService {
 
     void logicalDeleteById(String id);
 
+    void deleteById(String id);
+
     List<Mall> querySelective(String name, Integer page, Integer limit, String sort, String order, List<String> mallIds);
 
     Mall queryById(String mallId, Integer managerId);

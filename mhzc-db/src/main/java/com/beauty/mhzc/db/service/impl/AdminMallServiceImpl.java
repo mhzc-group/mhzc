@@ -41,6 +41,11 @@ public class AdminMallServiceImpl implements MallService {
         mallMapper.logicalDeleteByPrimaryKey(id);
     }
 
+    @Override
+    public void deleteById(String id) {
+        mallMapper.deleteByPrimaryKey(id);
+    }
+
     /**
      * 分页查询全部商城列表
      * @param name
