@@ -85,10 +85,14 @@ public class AppletController extends BaseController {
     @PostMapping("/read")
     @ApiOperation(value = "查询小程序信息详情", notes = "查询小程序信息详情")
     public Object read(@NotEmpty String mallId){
-        Mall mall = mallService.queryById(mallId, null);
+        //获取当前登陆用户信息
+        Subject currentUser = SecurityUtils.getSubject();
+        Manager currentAdmin= (Manager) currentUser.getPrincipal();
+        Integer managerId=currentAdmin.getId();
+        Mall mall = mallService.queryById(mallId, managerId);
         Applet applet=new Applet();
         if(Objects.nonNull(mall)){
-            String id=mall.getId();
+            String id=mall.getAppId();
             applet= appletService.queryById(id);
         }
         return  ResponseUtil.ok(applet);

@@ -84,6 +84,7 @@ public class MallServiceImpl implements MallService {
 
     @Override
     public Mall queryById(String mallId,Integer managerId) {
-        return mallMapper.selectByCondition(mallId,managerId);
+        Mall mall = mallMapper.selectByCondition(mallId, managerId);
+        return mall;
     }
 }

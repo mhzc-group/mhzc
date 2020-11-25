@@ -23,4 +23,5 @@ public class MallVO {
     private String updateBy;
     private Boolean deleted;
     private List<String> managerNames;
+    private String appletId;
 }

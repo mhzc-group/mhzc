@@ -5,12 +5,14 @@ import com.beauty.mhzc.admin.service.LogHelper;
 import com.beauty.mhzc.admin.vo.MallVO;
 import com.beauty.mhzc.core.validator.Order;
 import com.beauty.mhzc.core.validator.Sort;
+import com.beauty.mhzc.db.domain.Applet;
 import com.beauty.mhzc.db.enums.ConstantEnums;
 import com.beauty.mhzc.core.util.ResponseUtil;
 import com.beauty.mhzc.db.domain.Mall;
 import com.beauty.mhzc.db.domain.MallManager;
 import com.beauty.mhzc.db.domain.Manager;
 import com.beauty.mhzc.db.service.AdminService;
+import com.beauty.mhzc.db.service.AppletService;
 import com.beauty.mhzc.db.service.MallManagerService;
 import com.beauty.mhzc.db.service.MallService;
 import com.beauty.mhzc.db.service.impl.AdminMallServiceImpl;
@@ -59,6 +61,8 @@ public class MallController {
     private LogHelper logHelper;
     @Autowired
     private AdminService adminService;
+    @Autowired
+    private AppletService appletService;
 
     private void init(){
         //获取当前登陆用户信息
@@ -210,6 +214,8 @@ public class MallController {
         List<Manager> managers = adminService.all();
         //获取全部商城商户关联关系集合
         List<MallManager> mallManagers = mallManagerService.queryAll();
+        //获取全部小程序信息集合
+        List<Applet> applets = appletService.queryByList();
         for (Mall mall:malls){
             MallVO mallVO=new MallVO();
             BeanUtils.copyProperties(mall,mallVO);
@@ -225,8 +231,15 @@ public class MallController {
                         .collect(Collectors.toList());
                 mallVO.setManagerNames(collect1);
             }
+            if(applets.size()>0){
+                Applet applet = applets.stream().filter(x -> x.getId().equals(mallVO.getAppId())).findFirst().orElse(null);
+                if(applet!=null){
+                    mallVO.setAppletId(applet.getAppletId());
+                }
+            }
             mallVOList.add(mallVO);
         }
+
 
 
         return ResponseUtil.okList(mallVOList);

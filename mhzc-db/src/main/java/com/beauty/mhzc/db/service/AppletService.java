@@ -2,10 +2,12 @@ package com.beauty.mhzc.db.service;
 
 import com.beauty.mhzc.db.dao.AppletMapper;
 import com.beauty.mhzc.db.domain.Applet;
+import com.beauty.mhzc.db.domain.AppletExample;
 import com.beauty.mhzc.db.util.IdHelper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author xuan
@@ -30,5 +32,11 @@ public class AppletService {
 
     public Applet queryById(String id){
         return appletMapper.selectByPrimaryKey(id);
+    }
+
+    public List<Applet> queryByList(){
+        AppletExample appletExample=new AppletExample();
+        appletExample.or().andDeletedEqualTo(false);
+        return appletMapper.selectByExample(appletExample);
     }
 }
