@@ -23,7 +23,7 @@
         <plugin type="com.itfsw.mybatis.generator.plugins.SelectSelectivePlugin"/>
         <!-- Example Criteria 增强插件 -->
         <plugin type="com.itfsw.mybatis.generator.plugins.ExampleEnhancedPlugin"/>
-        <!-- 数据Model属性对应Column获取插件 -->
+        <!-- 数据Model属性对                                                应Column获取插件 -->
         <plugin type="com.itfsw.mybatis.generator.plugins.ModelColumnPlugin"/>
         <!-- 逻辑删除插件 -->
         <plugin type="com.itfsw.mybatis.generator.plugins.LogicalDeletePlugin">
@@ -56,112 +56,13 @@
         <javaClientGenerator type="XMLMAPPER" targetPackage="com.beauty.mhzc.db.dao"
                              targetProject="src/main/java"/>
         <!--表名-->
-<!--        <table tableName="litemall_ad">-->
-<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-<!--        </table>-->
-<!--        <table tableName="litemall_address">-->
-<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-<!--        </table>-->
 <!--        <table tableName="manager">-->
 <!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
 <!--            <columnOverride column="role_ids" javaType="java.lang.Integer[]"-->
 <!--                            typeHandler="com.beauty.mhzc.db.mybatis.JsonIntegerArrayTypeHandler"/>-->
 <!--        </table>-->
-<!--        <table tableName="litemall_brand">-->
-<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-<!--        </table>-->
-<!--        <table tableName="litemall_cart">-->
-<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-<!--            <columnOverride column="specifications" javaType="java.lang.String[]"-->
-<!--                            typeHandler="com.beauty.mhzc.db.mybatis.JsonStringArrayTypeHandler"/>-->
-<!--        </table>-->
-<!--        <table tableName="litemall_category">-->
-<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-<!--        </table>-->
-<!--        <table tableName="litemall_collect">-->
-<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-<!--        </table>-->
-<!--        <table tableName="litemall_comment">-->
-<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-<!--            <columnOverride column="pic_urls" javaType="java.lang.String[]"-->
-<!--                            typeHandler="com.beauty.mhzc.db.mybatis.JsonStringArrayTypeHandler"/>-->
-<!--        </table>-->
 
-<!--        <table tableName="litemall_feedback">-->
-<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-<!--            <columnOverride column="pic_urls" javaType="java.lang.String[]"-->
-<!--                            typeHandler="com.beauty.mhzc.db.mybatis.JsonStringArrayTypeHandler"/>-->
-<!--        </table>-->
-
-<!--        <table tableName="litemall_footprint">-->
-<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-<!--        </table>-->
-<!--        <table tableName="litemall_goods">-->
-<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-<!--            <columnOverride column="gallery" javaType="java.lang.String[]"-->
-<!--                            typeHandler="com.beauty.mhzc.db.mybatis.JsonStringArrayTypeHandler"/>-->
-<!--        </table>-->
-<!--        <table tableName="litemall_goods_attribute">-->
-<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-<!--        </table>-->
-<!--        <table tableName="litemall_goods_specification">-->
-<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-<!--        </table>-->
-<!--        <table tableName="litemall_goods_product">-->
-<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-<!--            <columnOverride column="specifications" javaType="java.lang.String[]"-->
-<!--                            typeHandler="com.beauty.mhzc.db.mybatis.JsonStringArrayTypeHandler"/>-->
-<!--        </table>-->
-<!--        <table tableName="litemall_issue">-->
-<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-<!--        </table>-->
-<!--        <table tableName="litemall_keyword">-->
-<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-<!--        </table>-->
-<!--        <table tableName="litemall_order">-->
-<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-<!--        </table>-->
-<!--        <table tableName="litemall_order_goods">-->
-<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-<!--            <columnOverride column="specifications" javaType="java.lang.String[]"-->
-<!--                            typeHandler="com.beauty.mhzc.db.mybatis.JsonStringArrayTypeHandler"/>-->
-<!--            <columnOverride column="comments" javaType="java.lang.Integer[]"-->
-<!--                            typeHandler="com.beauty.mhzc.db.mybatis.JsonIntegerArrayTypeHandler"/>-->
-
-<!--        </table>-->
-<!--        <table tableName="litemall_region">-->
-<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-<!--        </table>-->
-<!--        <table tableName="litemall_search_history">-->
-<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-<!--        </table>-->
-<!--        <table tableName="litemall_storage">-->
-<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-<!--        </table>-->
-<!--        <table tableName="litemall_topic">-->
-<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-<!--            <columnOverride column="goods" javaType="java.lang.Integer[]"-->
-<!--                            typeHandler="com.beauty.mhzc.db.mybatis.JsonIntegerArrayTypeHandler"/>-->
-<!--        </table>-->
 <!--        <table tableName="user">-->
-<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-<!--        </table>-->
-<!--        <table tableName="litemall_system">-->
-<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-<!--        </table>-->
-
-<!--        <table tableName="litemall_groupon_rules">-->
-<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-<!--        </table>-->
-<!--        <table tableName="litemall_groupon">-->
-<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-<!--        </table>-->
-<!--        <table tableName="litemall_coupon">-->
-<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-<!--            <columnOverride column="goods_value" javaType="java.lang.Integer[]"-->
-<!--                            typeHandler="com.beauty.mhzc.db.mybatis.JsonIntegerArrayTypeHandler"/>-->
-<!--        </table>-->
-<!--        <table tableName="litemall_coupon_user">-->
 <!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
 <!--        </table>-->
 <!--        <table tableName="role">-->
@@ -185,22 +86,11 @@
 <!--        <table tableName="storage">-->
 <!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
 <!--        </table>-->
-<!--        <table tableName="litemall_notice">-->
-<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-<!--        </table>-->
-<!--        <table tableName="litemall_notice_admin">-->
-<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-<!--        </table>-->
         <table tableName="material">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
         <table tableName="material_storage">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
-<!--        <table tableName="litemall_aftersale">-->
-<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-<!--            <columnOverride column="pictures" javaType="java.lang.String[]"-->
-<!--                            typeHandler="com.beauty.mhzc.db.mybatis.JsonStringArrayTypeHandler"/>-->
-<!--        </table>-->
     </context>
 </generatorConfiguration>
