@@ -7,6 +7,8 @@ import com.beauty.mhzc.core.validator.Order;
 import com.beauty.mhzc.core.validator.Sort;
 import com.beauty.mhzc.db.domain.Storage;
 import com.beauty.mhzc.db.service.StorageService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -22,6 +24,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin/storage")
+@Api(value = "文件存储管理控制器",tags = "文件存储管理控制器")
 @Validated
 public class StorageController {
     private final Log logger = LogFactory.getLog(StorageController.class);
@@ -38,19 +41,20 @@ public class StorageController {
                        @RequestParam(defaultValue = "1") Integer page,
                        @RequestParam(defaultValue = "10") Integer limit,
                        @Sort @RequestParam(defaultValue = "create_on") String sort,
-                       @Order @RequestParam(defaultValue = "desc") String order) {
-        List<Storage> storageList = storageService.querySelective(key, name, page, limit, sort, order);
+                       @Order @RequestParam(defaultValue = "desc") String order,String appId) {
+        List<Storage> storageList = storageService.querySelective(key, name, page, limit, sort, order,appId);
         return ResponseUtil.okList(storageList);
     }
 
     @RequiresPermissions("admin:storage:create")
     @RequiresPermissionsDesc(menu = {"系统管理", "对象存储"}, button = "上传")
+    @ApiOperation(value = "文件上传", notes = "文件上传")
     @PostMapping("/create")
-    public Object create(@RequestParam("file") MultipartFile file) throws IOException {
+    public Object create(@RequestParam("file") MultipartFile file,@NotEmpty String  appId) throws IOException {
 
         String originalFilename = file.getOriginalFilename();
         Storage storage = genericStorageService.store(file.getInputStream(), file.getSize(),
-                file.getContentType(), originalFilename);
+                file.getContentType(), originalFilename,appId);
         return ResponseUtil.ok(storage);
     }
 

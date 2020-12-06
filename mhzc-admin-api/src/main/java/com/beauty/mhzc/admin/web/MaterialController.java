@@ -34,7 +34,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin/material")
-@Api(value = "素材管理控制器",tags = "素材管理控制器")
+@Api(value = "素材分组管理控制器",tags = "素材分组管理控制器")
 @Validated
 public class MaterialController extends BaseController{
     @Autowired

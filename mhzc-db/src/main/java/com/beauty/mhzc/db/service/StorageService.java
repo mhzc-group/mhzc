@@ -57,7 +57,7 @@ public class StorageService {
         return storageMapper.selectByPrimaryKey(id);
     }
 
-    public List<Storage> querySelective(String key, String name, Integer page, Integer limit, String sort, String order) {
+    public List<Storage> querySelective(String key, String name, Integer page, Integer limit, String sort, String order,String appId) {
         StorageExample example = new StorageExample();
         StorageExample.Criteria criteria = example.createCriteria();
 
@@ -68,7 +68,7 @@ public class StorageService {
             criteria.andNameLike("%" + name + "%");
         }
         criteria.andDeletedEqualTo(false);
-
+        criteria.andAppIdEqualTo(appId);
         if (!StringUtils.isEmpty(sort) && !StringUtils.isEmpty(order)) {
             example.setOrderByClause(sort + " " + order);
         }
