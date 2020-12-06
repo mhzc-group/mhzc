@@ -21,5 +21,9 @@ public class MaterialStorageController {
     @Autowired
     private MaterialStorageService service;
 
+    //根据素材分组获取文件集合
+
+
+    //根据分组id，添加上传文件
 
 }
