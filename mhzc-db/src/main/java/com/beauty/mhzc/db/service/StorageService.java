@@ -34,12 +34,13 @@ public class StorageService {
         storageMapper.logicalDeleteByExample(example);
     }
 
-    public void add(Storage storageInfo) {
+    public String add(Storage storageInfo) {
         String id = IdHelper.generate32UUID();
         storageInfo.setId(id);
         storageInfo.setCreateOn(LocalDateTime.now());
         storageInfo.setUpdateOn(LocalDateTime.now());
         storageMapper.insertSelective(storageInfo);
+        return id;
     }
 
     public Storage findByKey(String key) {
@@ -55,6 +56,19 @@ public class StorageService {
 
     public Storage findById(String id) {
         return storageMapper.selectByPrimaryKey(id);
+    }
+
+    /**
+     * 获取文件集合
+     * @param ids
+     * @return
+     */
+    public List<Storage> queryList(List<String> ids) {
+        StorageExample example = new StorageExample();
+        StorageExample.Criteria criteria = example.createCriteria();
+        criteria.andIdIn(ids);
+        List<Storage> storageList = storageMapper.selectByExample(example);
+        return storageList;
     }
 
     public List<Storage> querySelective(String key, String name, Integer page, Integer limit, String sort, String order,String appId) {

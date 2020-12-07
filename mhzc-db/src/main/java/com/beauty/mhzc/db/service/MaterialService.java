@@ -1,9 +1,11 @@
 package com.beauty.mhzc.db.service;
 
+import com.alibaba.druid.util.StringUtils;
 import com.beauty.mhzc.db.dao.MaterialMapper;
 import com.beauty.mhzc.db.domain.Material;
 import com.beauty.mhzc.db.domain.MaterialExample;
 import com.beauty.mhzc.db.util.IdHelper;
+import com.github.pagehelper.PageHelper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -34,9 +36,17 @@ public class MaterialService {
         return materialMapper.selectByPrimaryKey(id);
     }
 
-    public List<Material> queryList(String appId){
+    public List<Material> queryList(String appId,Integer page, Integer limit, String sort, String order){
         MaterialExample example = new MaterialExample();
+        MaterialExample.Criteria criteria=example.createCriteria();
         example.or().andAppIdEqualTo(appId);
+        criteria.andDeletedEqualTo(false);
+
+        if (!StringUtils.isEmpty(sort) && !StringUtils.isEmpty(order)) {
+            example.setOrderByClause(sort + " " + order);
+        }
+
+        PageHelper.startPage(page, limit);
         List<Material> materials = materialMapper.selectByExample(example);
         return materials;
     }

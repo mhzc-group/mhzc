@@ -93,7 +93,7 @@ public class MaterialController extends BaseController{
                        @RequestParam(defaultValue = "10") Integer limit,
                        @Sort @RequestParam(defaultValue = "create_on") String sort,
                        @Order @RequestParam(defaultValue = "desc") String order){
-        List<Material> materials = materialService.queryList(appId);
+        List<Material> materials = materialService.queryList(appId,page,limit,sort,order);
         return  ResponseUtil.okList(materials);
     }
 
