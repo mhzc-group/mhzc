@@ -5,6 +5,7 @@ import com.beauty.mhzc.core.storage.GenericStorageService;
 import com.beauty.mhzc.core.util.ResponseUtil;
 import com.beauty.mhzc.core.validator.Order;
 import com.beauty.mhzc.core.validator.Sort;
+import com.beauty.mhzc.db.domain.Manager;
 import com.beauty.mhzc.db.domain.Storage;
 import com.beauty.mhzc.db.enums.ResultEnum;
 import com.beauty.mhzc.db.service.StorageService;
@@ -15,6 +16,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
@@ -61,11 +63,19 @@ public class StorageController {
     @RequiresPermissionsDesc(menu = {"系统管理", "对象存储"}, button = "上传")
     @ApiOperation(value = "文件上传", notes = "文件上传")
     @PostMapping("/create")
-    public Object create(@RequestParam("file") MultipartFile file,@NotEmpty String  appId) throws IOException {
-
+    public Object create(@RequestParam("file") MultipartFile file) throws IOException {
+        //获取当前登陆用户信息
+        Subject currentUser = SecurityUtils.getSubject();
+        Manager currentAdmin= (Manager) currentUser.getPrincipal();
+        Session session=SecurityUtils.getSubject().getSession();
+        //获取appId
+        String appId = (String) session.getAttribute("appId");
+        if(Objects.isNull(appId)){
+            return  ResponseUtil.fail(ResultEnum.SWITCH_AGAIN);
+        }
         String originalFilename = file.getOriginalFilename();
         Storage storage = genericStorageService.store(file.getInputStream(), file.getSize(),
-                file.getContentType(), originalFilename,appId);
+                file.getContentType(), originalFilename,appId,currentAdmin.getUsername());
         return ResponseUtil.ok(storage);
     }
 
