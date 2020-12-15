@@ -21,6 +21,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotEmpty;
 import java.io.IOException;
 import java.util.List;
@@ -74,8 +75,9 @@ public class MaterialStorageController {
             @ApiImplicitParam(name = "appId", value = "appId", required = true, defaultValue = "", dataType = "string", paramType = "query")
     })
     @Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
-    public Object create(@NotEmpty String id,@RequestParam("file") MultipartFile file,String appId) throws IOException {
-
+    public Object create(@NotEmpty String id, @RequestParam("file") MultipartFile file, HttpSession session) throws IOException {
+        //获取appId
+        String appId = (String) session.getAttribute("appId");
         String originalFilename = file.getOriginalFilename();
         Storage storage = genericStorageService.store(file.getInputStream(), file.getSize(),
                 file.getContentType(), originalFilename,appId);

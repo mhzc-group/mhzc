@@ -32,7 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -262,6 +262,17 @@ public class MallController {
         return ResponseUtil.ok(mall);
     }
 
+    @RequiresPermissions("admin:mall:switch")
+    @RequiresPermissionsDesc(menu = {"商城管理", "商城管理"}, button = "商城切换")
+    @PostMapping("/switch")
+    @ApiOperation(value = "商城切换", notes = "商城切换，切换session中存储的appId")
+    public Object switchMall(String id, HttpSession session){
+        Mall mall = mallServiceImpl.queryOne(id);
+        String appId=mall.getAppId();
+        session.removeAttribute("appId");
+        session.setAttribute("appId",appId);
+        return ResponseUtil.ok();
+    }
 
 
 

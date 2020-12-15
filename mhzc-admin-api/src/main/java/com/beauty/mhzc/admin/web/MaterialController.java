@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
@@ -88,11 +89,13 @@ public class MaterialController extends BaseController{
             @ApiImplicitParam(name = "sort", value = "排序字段", required = false, defaultValue = "create_on",dataType = "string", paramType = "query"),
             @ApiImplicitParam(name = "order", value = "排序类型", required = false, defaultValue = "desc",dataType = "string", paramType = "query")
     })
-    public Object list(@NotEmpty String appId,
-                       @RequestParam(defaultValue = "1") Integer page,
-                       @RequestParam(defaultValue = "10") Integer limit,
-                       @Sort @RequestParam(defaultValue = "create_on") String sort,
-                       @Order @RequestParam(defaultValue = "desc") String order){
+    public Object list(
+            @RequestParam(defaultValue = "1") Integer page,
+            @RequestParam(defaultValue = "10") Integer limit,
+            @Sort @RequestParam(defaultValue = "create_on") String sort,
+            @Order @RequestParam(defaultValue = "desc") String order, HttpSession session){
+        //获取appId
+        String appId = (String) session.getAttribute("appId");
         List<Material> materials = materialService.queryList(appId,page,limit,sort,order);
         return  ResponseUtil.okList(materials);
     }

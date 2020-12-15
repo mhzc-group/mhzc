@@ -87,4 +87,9 @@ public class MallServiceImpl implements MallService {
         Mall mall = mallMapper.selectByCondition(mallId, managerId);
         return mall;
     }
+
+    public Mall queryOne(String id){
+        Mall mall = mallMapper.selectByPrimaryKey(id);
+        return mall;
+    }
 }

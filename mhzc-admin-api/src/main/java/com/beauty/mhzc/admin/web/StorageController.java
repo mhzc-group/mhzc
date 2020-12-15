@@ -18,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotEmpty;
 import java.io.IOException;
 import java.util.List;
@@ -41,7 +42,9 @@ public class StorageController {
                        @RequestParam(defaultValue = "1") Integer page,
                        @RequestParam(defaultValue = "10") Integer limit,
                        @Sort @RequestParam(defaultValue = "create_on") String sort,
-                       @Order @RequestParam(defaultValue = "desc") String order,String appId) {
+                       @Order @RequestParam(defaultValue = "desc") String order, HttpSession session) {
+        //获取appId
+        String appId = (String) session.getAttribute("appId");
         List<Storage> storageList = storageService.querySelective(key, name, page, limit, sort, order,appId);
         return ResponseUtil.okList(storageList);
     }
