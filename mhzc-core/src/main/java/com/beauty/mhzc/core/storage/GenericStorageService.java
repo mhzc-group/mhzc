@@ -46,7 +46,7 @@ public class GenericStorageService {
      * @param fileName      文件索引名
      */
     @Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
-    public Storage store(InputStream inputStream, long contentLength, String contentType, String fileName,String  appId) {
+    public Storage store(InputStream inputStream, long contentLength, String contentType, String fileName,String  appId,String createBy) {
         String key = generateKey(fileName);
         String url = generateUrl(key);
         Storage storageInfo = new Storage();
@@ -56,7 +56,9 @@ public class GenericStorageService {
         storageInfo.setKey(key);
         storageInfo.setUrl(url);
         storageInfo.setAppId(appId);
-        storageService.add(storageInfo);
+        storageInfo.setCreateBy(createBy);
+        String id = storageService.add(storageInfo);
+        storageInfo.setId(id);
         genericStorage.store(inputStream, contentLength, contentType, key);
         return storageInfo;
     }

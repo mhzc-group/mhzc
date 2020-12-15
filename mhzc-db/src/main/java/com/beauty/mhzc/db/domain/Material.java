@@ -114,7 +114,6 @@ public class Material {
      *
      * @mbg.generated
      */
-    @NotEmpty(message = "appId不能为空",groups = {Material.InsertGroup.class} )
     private String appId;
 
     /**

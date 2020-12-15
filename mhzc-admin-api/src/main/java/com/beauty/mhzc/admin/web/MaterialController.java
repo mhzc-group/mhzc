@@ -15,6 +15,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author xuan
@@ -52,11 +54,18 @@ public class MaterialController extends BaseController{
         if(bindingResult.hasErrors()){
             return ResponseUtil.fail(ResultEnum.PARAMETER_CANNOT_BE_EMPTY.getCode(),buildValiateMsg(bindingResult).toString());
         }
+        Session session=SecurityUtils.getSubject().getSession();
+        //获取appId
+        String appId = (String) session.getAttribute("appId");
+        if(Objects.isNull(appId)){
+            return  ResponseUtil.fail(ResultEnum.SWITCH_AGAIN);
+        }
         //获取当前登陆用户信息
         Subject currentUser = SecurityUtils.getSubject();
         Manager currentAdmin= (Manager) currentUser.getPrincipal();
         material.setCreateBy(currentAdmin.getUsername());
         material.setUpdateBy(null);
+        material.setAppId(appId);
         materialService.save(material);
         return  ResponseUtil.ok();
     }
@@ -69,6 +78,7 @@ public class MaterialController extends BaseController{
         if(bindingResult.hasErrors()){
             return ResponseUtil.fail(ResultEnum.PARAMETER_CANNOT_BE_EMPTY.getCode(),buildValiateMsg(bindingResult).toString());
         }
+
         //获取当前登陆用户信息
         Subject currentUser = SecurityUtils.getSubject();
         Manager currentAdmin= (Manager) currentUser.getPrincipal();
@@ -83,7 +93,6 @@ public class MaterialController extends BaseController{
     @PostMapping("/list")
     @ApiOperation(value = "查询素材分组列表", notes = "查询素材分组列表,根据appId")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "appId", value = "小程序appId", required = true, defaultValue = "", dataType = "string", paramType = "query"),
             @ApiImplicitParam(name = "page", value = "页数", required = false, defaultValue = "1", dataType = "integer", paramType = "query"),
             @ApiImplicitParam(name = "limit", value = "每页条数", required = false, defaultValue = "10",dataType = "integer", paramType = "query"),
             @ApiImplicitParam(name = "sort", value = "排序字段", required = false, defaultValue = "create_on",dataType = "string", paramType = "query"),
@@ -93,9 +102,13 @@ public class MaterialController extends BaseController{
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer limit,
             @Sort @RequestParam(defaultValue = "create_on") String sort,
-            @Order @RequestParam(defaultValue = "desc") String order, HttpSession session){
+            @Order @RequestParam(defaultValue = "desc") String order){
+        Session session=SecurityUtils.getSubject().getSession();
         //获取appId
         String appId = (String) session.getAttribute("appId");
+        if(Objects.isNull(appId)){
+            return  ResponseUtil.fail(ResultEnum.SWITCH_AGAIN);
+        }
         List<Material> materials = materialService.queryList(appId,page,limit,sort,order);
         return  ResponseUtil.okList(materials);
     }

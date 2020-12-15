@@ -5,15 +5,20 @@ import com.beauty.mhzc.core.storage.GenericStorageService;
 import com.beauty.mhzc.core.util.ResponseUtil;
 import com.beauty.mhzc.core.validator.Order;
 import com.beauty.mhzc.core.validator.Sort;
+import com.beauty.mhzc.db.domain.Manager;
 import com.beauty.mhzc.db.domain.MaterialStorage;
 import com.beauty.mhzc.db.domain.Storage;
+import com.beauty.mhzc.db.enums.ResultEnum;
 import com.beauty.mhzc.db.service.MaterialStorageService;
 import com.beauty.mhzc.db.service.StorageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +30,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotEmpty;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author xuan
@@ -68,19 +74,24 @@ public class MaterialStorageController {
     
     @RequiresPermissions("admin:material_storage:create")
     @RequiresPermissionsDesc(menu = {"素材文件管理控制器", "素材文件管理控制器"}, button = "添加")
-    @GetMapping("/create")
+    @PostMapping("/create")
     @ApiOperation(value = "根据分组id，添加上传文件", notes = "根据分组id，添加上传文件")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "素材分组id", required = true, defaultValue = "", dataType = "string", paramType = "query"),
-            @ApiImplicitParam(name = "appId", value = "appId", required = true, defaultValue = "", dataType = "string", paramType = "query")
-    })
+    @ApiImplicitParam(name = "id", value = "素材分组id", required = true, defaultValue = "", dataType = "string", paramType = "query")
     @Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
-    public Object create(@NotEmpty String id, @RequestParam("file") MultipartFile file, HttpSession session) throws IOException {
+    public Object create(@NotEmpty String id, @RequestParam("file") MultipartFile file) throws IOException {
+        //获取当前登陆用户信息
+        Subject currentUser = SecurityUtils.getSubject();
+        Manager currentAdmin= (Manager) currentUser.getPrincipal();
+
+        Session session=SecurityUtils.getSubject().getSession();
         //获取appId
         String appId = (String) session.getAttribute("appId");
+        if(Objects.isNull(appId)){
+            return  ResponseUtil.fail(ResultEnum.SWITCH_AGAIN);
+        }
         String originalFilename = file.getOriginalFilename();
         Storage storage = genericStorageService.store(file.getInputStream(), file.getSize(),
-                file.getContentType(), originalFilename,appId);
+                file.getContentType(), originalFilename,appId,currentAdmin.getUsername());
 
         MaterialStorage materialStorage=new MaterialStorage();
         materialStorage.setMaterialId(id);

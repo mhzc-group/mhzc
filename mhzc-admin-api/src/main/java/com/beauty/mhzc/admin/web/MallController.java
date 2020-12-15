@@ -24,6 +24,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -266,7 +267,8 @@ public class MallController {
     @RequiresPermissionsDesc(menu = {"商城管理", "商城管理"}, button = "商城切换")
     @PostMapping("/switch")
     @ApiOperation(value = "商城切换", notes = "商城切换，切换session中存储的appId")
-    public Object switchMall(String id, HttpSession session){
+    public Object switchMall(String id){
+        Session session= SecurityUtils.getSubject().getSession();
         Mall mall = mallServiceImpl.queryOne(id);
         String appId=mall.getAppId();
         session.removeAttribute("appId");

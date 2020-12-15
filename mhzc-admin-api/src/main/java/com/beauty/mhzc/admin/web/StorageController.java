@@ -6,12 +6,15 @@ import com.beauty.mhzc.core.util.ResponseUtil;
 import com.beauty.mhzc.core.validator.Order;
 import com.beauty.mhzc.core.validator.Sort;
 import com.beauty.mhzc.db.domain.Storage;
+import com.beauty.mhzc.db.enums.ResultEnum;
 import com.beauty.mhzc.db.service.StorageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.session.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
@@ -22,6 +25,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotEmpty;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/admin/storage")
@@ -42,9 +46,13 @@ public class StorageController {
                        @RequestParam(defaultValue = "1") Integer page,
                        @RequestParam(defaultValue = "10") Integer limit,
                        @Sort @RequestParam(defaultValue = "create_on") String sort,
-                       @Order @RequestParam(defaultValue = "desc") String order, HttpSession session) {
+                       @Order @RequestParam(defaultValue = "desc") String order) {
+        Session session= SecurityUtils.getSubject().getSession();
         //获取appId
         String appId = (String) session.getAttribute("appId");
+        if(Objects.isNull(appId)){
+            return  ResponseUtil.fail(ResultEnum.SWITCH_AGAIN);
+        }
         List<Storage> storageList = storageService.querySelective(key, name, page, limit, sort, order,appId);
         return ResponseUtil.okList(storageList);
     }

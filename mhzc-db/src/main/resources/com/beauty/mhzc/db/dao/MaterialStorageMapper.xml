@@ -111,7 +111,7 @@
       distinct
     </if>
     <choose>
-      <when test="selective != null and selective.length > 0">
+      <when test="selective != null and selective.length &gt; 0">
         <foreach collection="selective" item="column" separator=",">
           ${column.aliasedEscapedColumnName}
         </foreach>
@@ -145,7 +145,7 @@
     -->
     select
     <choose>
-      <when test="selective != null and selective.length > 0">
+      <when test="selective != null and selective.length &gt; 0">
         <foreach collection="selective" item="column" separator=",">
           ${column.aliasedEscapedColumnName}
         </foreach>
@@ -183,8 +183,8 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.String">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into material_storage (material_id, storage_id)
-    values (#{materialId,jdbcType=VARCHAR}, #{storageId,jdbcType=VARCHAR})
+    insert into material_storage (id,material_id, storage_id)
+    values (#{id,jdbcType=VARCHAR},#{materialId,jdbcType=VARCHAR}, #{storageId,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.beauty.mhzc.db.domain.MaterialStorage">
     <!--
@@ -305,7 +305,7 @@
     -->
     select
     <choose>
-      <when test="selective != null and selective.length > 0">
+      <when test="selective != null and selective.length &gt; 0">
         <foreach collection="selective" item="column" separator=",">
           ${column.aliasedEscapedColumnName}
         </foreach>

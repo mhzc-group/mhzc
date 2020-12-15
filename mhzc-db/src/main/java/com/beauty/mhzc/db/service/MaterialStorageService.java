@@ -63,7 +63,7 @@ public class MaterialStorageService {
         StorageExample.Criteria criteria1 = example1.createCriteria();
         criteria1.andIdIn(collect);
         if (!StringUtils.isEmpty(sort) && !StringUtils.isEmpty(order)) {
-            example.setOrderByClause(sort + " " + order);
+            example1.setOrderByClause(sort + " " + order);
         }
         PageHelper.startPage(page, limit);
         List<Storage> storageList = storageMapper.selectByExample(example1);
