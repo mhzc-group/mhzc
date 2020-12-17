@@ -11,6 +11,7 @@ import com.beauty.mhzc.core.util.ResponseUtil;
 import com.beauty.mhzc.db.domain.Mall;
 import com.beauty.mhzc.db.domain.MallManager;
 import com.beauty.mhzc.db.domain.Manager;
+import com.beauty.mhzc.db.enums.ResultEnum;
 import com.beauty.mhzc.db.service.AdminService;
 import com.beauty.mhzc.db.service.AppletService;
 import com.beauty.mhzc.db.service.MallManagerService;
@@ -31,6 +32,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
@@ -47,7 +50,7 @@ import static com.beauty.mhzc.admin.util.AdminResponseCode.*;
 @RestController
 @RequestMapping("/admin/mall")
 @Api(value = "商城控制器",tags = "商城控制器")
-public class MallController {
+public class MallController extends BaseController {
 
     private  MallService mallService;
 
@@ -88,8 +91,10 @@ public class MallController {
     @PostMapping("/create")
     @ApiOperation(value = "商城添加", notes = "商城添加")
     @Transactional(propagation = Propagation.REQUIRED)
-    //TODO 使用validate与bindingResult 进行参数验证
-    public Object save(Mall mall,@RequestParam(value = "managerIds[]")Integer[] managerIds){
+    public Object save(@Validated({Mall.InsertGroup.class}) Mall mall, BindingResult bindingResult, @RequestParam(value = "managerIds[]")Integer[] managerIds){
+        if(bindingResult.hasErrors()){
+            return ResponseUtil.fail(ResultEnum.PARAMETER_CANNOT_BE_EMPTY.getCode(),buildValiateMsg(bindingResult).toString());
+        }
 //        init();
         Subject currentUser = SecurityUtils.getSubject();
         currentAdmin= (Manager) currentUser.getPrincipal();
@@ -107,7 +112,6 @@ public class MallController {
             String uuid = IdHelper.generate32UUID();
             mallManager.setId(uuid);
             mallManager.setMallId(id);
-            //TODO mallManager表增加外键约束
             mallManager.setManagerId(managerId);
             list.add(mallManager);
         }
@@ -124,8 +128,10 @@ public class MallController {
     @RequiresPermissionsDesc(menu = {"商城管理", "商城管理"}, button = "修改")
     @PostMapping("/update")
     @ApiOperation(value = "商城修改", notes = "商城修改")
-    //TODO 使用validate与bindingResult 进行参数验证
-    public Object update(Mall mall){
+    public Object update(@Validated({Mall.UpdateGroup.class}) Mall mall,BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            return ResponseUtil.fail(ResultEnum.PARAMETER_CANNOT_BE_EMPTY.getCode(),buildValiateMsg(bindingResult).toString());
+        }
         Subject currentUser = SecurityUtils.getSubject();
         currentAdmin= (Manager) currentUser.getPrincipal();
         mall.setUpdateBy(currentAdmin.getUsername());
