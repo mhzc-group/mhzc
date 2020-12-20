@@ -23,7 +23,7 @@
     <modules>
         <module>mhzc-core</module>
         <module>mhzc-db</module>
-<!--        <module>mhzc-wx-api</module>-->
+        <module>mhzc-wx</module>
         <module>mhzc-admin-api</module>
         <module>mhzc-all</module>
 <!--        <module>mhzc-all-war</module>-->
