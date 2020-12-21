@@ -1,0 +1,32 @@
+spring:
+  profiles:
+    active: db,wx
+  messages:
+    encoding: UTF-8
+
+server:
+  port: 9001
+
+
+  redis:
+    host: 127.0.0.1
+    password: ''
+    port: 6379
+    database: 0
+
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+logging:
+  level:
+    root:  INFO
+    org.springframework:  INFO
+    org.mybatis:  INFO
+    com.beauty.mhzc.db.dao: INFO
+
+wx:
+  miniapp:
+    appid: xxx
+    appsecret: xxx
+#swagger:
+#  production: true
