@@ -26,7 +26,7 @@ logging:
 
 wx:
   miniapp:
-    appid: xxx
-    appsecret: xxx
+    appid: wx8cfd8b8e050ebf5d
+    appsecret: 903ca7f3197b3fae61a1315b7afc0e97
 #swagger:
 #  production: true

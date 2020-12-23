@@ -2,7 +2,11 @@ package com.beauty.mhzc.filter;
 
 
 import com.beauty.mhzc.vo.JwtToken;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
+import org.apache.shiro.web.util.WebUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -17,6 +21,7 @@ import java.util.Date;
  * @date 2020/12/20 20:39
  */
 
+@Slf4j
 public class JwtFilter extends BasicHttpAuthenticationFilter {
 
     /**
@@ -32,13 +37,29 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
     /**
      * 此方法调用登陆，验证逻辑
      */
+    // filter异常抛出,由CustomErrorController抛出
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
+        Subject subject = getSubject(request, response);
         if (isLoginAttempt(request, response)) {
             JwtToken token = new JwtToken(getAuthzHeader(request));
-            getSubject(request, response).login(token);
+            try {
+                subject.login(token);
+            } catch (Exception e) {
+                return false;
+            }
+            return true;
+        }else {
+            return false;
         }
-        return true;
+
+    }
+
+    @Override
+    protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
+        log.error("token is invalid , please check your token");
+        WebUtils.toHttp(response).sendError(401);
+        return false;
     }
     /**
      * 提供跨域支持

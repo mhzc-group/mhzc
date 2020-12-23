@@ -1,6 +1,7 @@
 package com.beauty.mhzc.shiro;
 
 
+import com.beauty.mhzc.filter.AuthFilter;
 import com.beauty.mhzc.filter.JwtFilter;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;
@@ -52,14 +53,14 @@ public class ShirConfig {
         ShiroFilterFactoryBean factoryBean = new ShiroFilterFactoryBean();
         Map<String, Filter> filterMap = new HashMap<>();
         filterMap.put("jwt", new JwtFilter());
+        filterMap.put("auth", new AuthFilter());
         factoryBean.setFilters(filterMap);
         factoryBean.setSecurityManager(securityManager);
         Map<String, String> filterRuleMap = new HashMap<>();
         //登陆相关api不需要被过滤器拦截
         filterRuleMap.put("/api/wx/user/login/**", "anon");
-        filterRuleMap.put("/api/response/**", "anon");
         // 所有请求通过JWT Filter
-        filterRuleMap.put("/**", "jwt");
+        filterRuleMap.put("/**", "jwt,auth");
         factoryBean.setFilterChainDefinitionMap(filterRuleMap);
         return factoryBean;
     }
