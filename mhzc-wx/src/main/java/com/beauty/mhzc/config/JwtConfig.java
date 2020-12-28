@@ -45,17 +45,19 @@ public class JwtConfig {
      * @return 返回 jwt token
      */
     public String createTokenByWxAccount(User wxAccount) {
-        String jwtId = UUID.randomUUID().toString();                 //JWT 随机ID,做为验证的key
+        //JWT 随机ID,做为验证的key
+        String jwtId = UUID.randomUUID().toString();
         //1 . 加密算法进行签名得到token
         Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
         String token = JWT.create()
                 .withClaim("wxOpenId", wxAccount.getWeixinOpenid())
                 .withClaim("sessionKey", wxAccount.getSessionKey())
                 .withClaim("jwt-id", jwtId)
-                .withExpiresAt(new Date(System.currentTimeMillis() + expire_time*1000))  //JWT 配置过期时间的正确姿势
+                //JWT 配置过期时间的正确姿势
+                .withExpiresAt(new Date(System.currentTimeMillis() + expire_time*1000))
                 .sign(algorithm);
         //2 . Redis缓存JWT, 注 : 请和JWT过期时间一致
-        redisTemplate.opsForValue().set(Constants.Redis.JWT_TOKEN+ wxAccount.getWeixinOpenid(), token, expire_time, TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set(Constants.Redis.JWT_TOKEN+ jwtId+"-"+wxAccount.getWeixinOpenid(), token, expire_time, TimeUnit.SECONDS);
         return token;
     }
 
@@ -70,7 +72,7 @@ public class JwtConfig {
     public boolean verifyToken(String token) {
         try {
             //1 . 根据token解密，解密出jwt-id , 先从redis中查找出redisToken，匹配是否相同
-            String redisToken = redisTemplate.opsForValue().get(Constants.Redis.JWT_TOKEN + getWxOpenIdByToken(token));
+            String redisToken = redisTemplate.opsForValue().get(Constants.Redis.JWT_TOKEN + getJwtIdByToken(token)+"-"+getWxOpenIdByToken(token));
             if (!redisToken.equals(token)) {return false;}
 
             //2 . 得到算法相同的JWTVerifier
@@ -79,12 +81,15 @@ public class JwtConfig {
                     .withClaim("wxOpenId", getWxOpenIdByToken(redisToken))
                     .withClaim("sessionKey", getSessionKeyByToken(redisToken))
                     .withClaim("jwt-id", getJwtIdByToken(redisToken))
-                    .acceptExpiresAt(System.currentTimeMillis() + expire_time*1000 )  //JWT 正确的配置续期姿势
+                    //JWT 正确的配置续期姿势
+                    .acceptExpiresAt(System.currentTimeMillis() + expire_time*1000 )
                     .build();
             //3 . 验证token
             verifier.verify(redisToken);
             //4 . Redis缓存JWT续期
-            redisTemplate.opsForValue().set(Constants.Redis.JWT_TOKEN + getWxOpenIdByToken(token), redisToken, expire_time, TimeUnit.SECONDS);
+            // getJwtIdByToken(token)+getWxOpenIdByToken(token); getJwtIdByToken增加随机数,getWxOpenIdByToken便于维护redis
+            redisTemplate.opsForValue().set(Constants.Redis.JWT_TOKEN + getJwtIdByToken(token)+"-"+getWxOpenIdByToken(token),
+                    redisToken, expire_time, TimeUnit.SECONDS);
             return true;
         } catch (Exception e) { //捕捉到任何异常都视为校验失败
             return false;

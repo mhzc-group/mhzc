@@ -1,15 +1,28 @@
 package com.beauty.mhzc.controller;
 
-import com.beauty.mhzc.service.WxAccountService;
+import cn.binarywang.wx.miniapp.api.WxMaService;
+import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
+import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
+import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
+import com.beauty.mhzc.config.JwtConfig;
+import com.beauty.mhzc.config.WxMaConfiguration;
+import com.beauty.mhzc.db.domain.User;
+import com.beauty.mhzc.db.service.UserService;
 import com.beauty.mhzc.utils.ResponseUtil;
-import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import me.chanjar.weixin.common.error.WxErrorException;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author xuan
@@ -17,33 +30,121 @@ import java.util.Map;
  */
 
 @RestController
+@RequestMapping("/wx/user/{appId}")
 public class WxAppletLoginController {
     @Resource
-    private WxAccountService wxAppletService;
+    private UserService userService;
+
+    @Resource
+    private JwtConfig jwtConfig;
 
     /**
      * 微信小程序端用户登陆api
      * 返回给小程序端 自定义登陆态 token
      */
-    @PostMapping("/api/wx/user/login")
-    public Object wxAppletLoginApi(@RequestBody Map<String, String> request) {
-        if (!request.containsKey("code") || request.get("code") == null || request.get("code").equals("")) {
+    @PostMapping("/login")
+    public Object wxAppletLoginApi(@PathVariable String appId, String code) {
+        final WxMaService wxService = WxMaConfiguration.getMaService(appId);
+
+        if (code == null || "".equals(code)) {
             Map<String, String> result = new HashMap<>();
             result.put("msg", "缺少参数code或code不合法");
             return  ResponseUtil.fail(HttpStatus.BAD_REQUEST);
         } else {
-            return ResponseUtil.ok(wxAppletService.wxUserLogin(request.get("code")));
+            String token = null;
+            try {
+                WxMaJscode2SessionResult session = wxService.getUserService().getSessionInfo(code);
+                // 先从本地数据库中查找用户是否存在
+                User wxAccount = userService.queryByOid(session.getOpenid());
+                if (wxAccount == null) {
+                    wxAccount = new User();
+                    //不存在就新建用户
+                    wxAccount.setWeixinOpenid(session.getOpenid());
+                    // 更新sessionKey和 登陆时间
+                    wxAccount.setSessionKey(session.getSessionKey());
+                    wxAccount.setLastLoginTime(LocalDateTime.now());
+                    userService.add(wxAccount);
+                }else {
+                    // 更新sessionKey和 登陆时间
+                    wxAccount.setSessionKey(session.getSessionKey());
+                    wxAccount.setLastLoginTime(LocalDateTime.now());
+                    userService.updateById(wxAccount);
+                }
+
+                //JWT 返回自定义登陆态 Token
+                token = jwtConfig.createTokenByWxAccount(wxAccount);
+            } catch (WxErrorException e) {
+                return ResponseUtil.fail(e.getError().getErrorCode(),e.getError().getErrorMsg());
+            }
+            return ResponseUtil.ok(token);
         }
     }
 
     /**
-     * 需要认证的测试接口  需要 @RequiresAuthentication 注解，则调用此接口需要 header 中携带自定义登陆态 authorization
+     * <pre>
+     * 获取用户信息接口
+     * </pre>
      */
-//    @RequiresAuthentication
+    @PostMapping("/info")
+    public Object info(@PathVariable String appId, String signature, String rawData, String encryptedData, String iv) throws UnsupportedEncodingException {
+        final WxMaService wxService = WxMaConfiguration.getMaService(appId);
+        Subject currentUser = SecurityUtils.getSubject();
+        String  openId = (String)currentUser.getPrincipal();
+        User user = userService.queryByOid(openId);
+        String sessionKey=null;
+        if(Objects.nonNull(user)){
+            sessionKey=user.getSessionKey();
+        }
+        //用户信息校验
+        if (!wxService.getUserService().checkUserInfo(sessionKey, rawData, signature)) {
+            return  ResponseUtil.fail(HttpStatus.BAD_REQUEST);
+        }
+        // 解密用户信息
+        WxMaUserInfo userInfo = wxService.getUserService().getUserInfo(sessionKey, encryptedData, iv);
+
+        return  ResponseUtil.ok(userInfo);
+    }
+
+
+    /**
+     * <pre>
+     * 获取用户绑定手机号信息
+     * </pre>
+     */
+    @PostMapping("/phone")
+    public Object phone(@PathVariable String appId, String signature,
+                        String rawData, String encryptedData, String iv) {
+        final WxMaService wxService = WxMaConfiguration.getMaService(appId);
+        Subject currentUser = SecurityUtils.getSubject();
+        String  openId = (String)currentUser.getPrincipal();
+        User user = userService.queryByOid(openId);
+        String sessionKey=null;
+        if(Objects.nonNull(user)){
+            sessionKey=user.getSessionKey();
+        }
+        // 用户信息校验
+        if (!wxService.getUserService().checkUserInfo(sessionKey, rawData, signature)) {
+            return  ResponseUtil.fail(HttpStatus.BAD_REQUEST);
+        }
+
+        // 解密
+        WxMaPhoneNumberInfo phoneNoInfo = wxService.getUserService().getPhoneNoInfo(sessionKey, encryptedData, iv);
+
+        return  ResponseUtil.ok(phoneNoInfo);
+    }
+
+
     @PostMapping("/sayHello")
     public Object sayHello() {
         Map<String, String> result = new HashMap<>();
         result.put("words", "hello World");
         return ResponseUtil.ok(result);
+    }
+
+    public static void main(String[] args) throws UnsupportedEncodingException {
+
+        String encode = URLEncoder.encode("{\"nickName\":\"xx_\uD83C\uDF52\",\"gender\":1,\"language\":\"zh_CN\",\"city\":\"Jixian\",\"province\":\"Tianjin\",\"country\":\"China\",\"avatarUrl\":\"https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIIxlu1wK2r7o90MxyrkhL0ibARtsZYl0I830Xia9MWibibqnK789qwIVrKGV3QUQuogGBwZibkoiczc2Bg/132\"}", "utf-8");
+        String decode = URLDecoder.decode(encode, "utf-8");
+        System.out.println(encode);
     }
 }

@@ -19,14 +19,18 @@ mybatis:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 logging:
   level:
-    root:  INFO
-    org.springframework:  INFO
-    org.mybatis:  INFO
-    com.beauty.mhzc.db.dao: INFO
+    org.springframework.web: info
+    com.beauty.mhzc: debug
+    cn.binarywang.wx.miniapp: debug
 
 wx:
   miniapp:
-    appid: wx8cfd8b8e050ebf5d
-    appsecret: 903ca7f3197b3fae61a1315b7afc0e97
+    configs:
+      - appid: wx8cfd8b8e050ebf5d
+        secret: 903ca7f3197b3fae61a1315b7afc0e97
+        token: #微信小程序消息服务器配置的token
+        aesKey: #微信小程序消息服务器配置的EncodingAESKey
+        msgDataFormat: JSON
+
 #swagger:
 #  production: true

@@ -83,7 +83,7 @@ public class CustomRealm {
                 if (!jwtConfig.verifyToken(jwtToken)) {
                     throw new AuthenticationException("token is invalid , please check your token");
                 }
-                return new SimpleAuthenticationInfo(token, token, getName());
+                return new SimpleAuthenticationInfo(wxOpenId, token, getName());
             }
         };
         jwtRealm.setCredentialsMatcher(credentialsMatcher());
