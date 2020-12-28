@@ -1,4 +1,4 @@
-package com.beauty.mhzc.vo;
+package com.beauty.mhzc.wx.vo;
 
 import lombok.Data;
 

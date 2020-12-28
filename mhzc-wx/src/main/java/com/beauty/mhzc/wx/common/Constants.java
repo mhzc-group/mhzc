@@ -1,4 +1,4 @@
-package com.beauty.mhzc.common;
+package com.beauty.mhzc.wx.common;
 
 /**
  * 全局常量

@@ -1,4 +1,4 @@
-package com.beauty.mhzc.utils;
+package com.beauty.mhzc.wx.utils;
 
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;

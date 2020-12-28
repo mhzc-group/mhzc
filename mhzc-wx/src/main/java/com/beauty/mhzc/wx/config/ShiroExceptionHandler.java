@@ -1,6 +1,6 @@
-package com.beauty.mhzc.config;
+package com.beauty.mhzc.wx.config;
 
-import com.beauty.mhzc.utils.ResponseUtil;
+import com.beauty.mhzc.wx.utils.ResponseUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.shiro.authc.AuthenticationException;

@@ -1,4 +1,4 @@
-package com.beauty.mhzc.filter;
+package com.beauty.mhzc.wx.filter;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -17,6 +17,7 @@ import javax.servlet.ServletResponse;
  */
 
 @Slf4j
+@Deprecated
 public class AuthFilter extends AuthenticatingFilter{
     @Override
     protected AuthenticationToken createToken(ServletRequest servletRequest, ServletResponse servletResponse) throws Exception {

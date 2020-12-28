@@ -1,4 +1,4 @@
-package com.beauty.mhzc.config;
+package com.beauty.mhzc.wx.config;
 
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;

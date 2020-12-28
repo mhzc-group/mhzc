@@ -1,8 +1,8 @@
-package com.beauty.mhzc.shiro;
+package com.beauty.mhzc.wx.shiro;
 
 
-import com.beauty.mhzc.filter.AuthFilter;
-import com.beauty.mhzc.filter.JwtFilter;
+import com.beauty.mhzc.wx.filter.AuthFilter;
+import com.beauty.mhzc.wx.filter.JwtFilter;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
@@ -53,14 +53,21 @@ public class ShirConfig {
         ShiroFilterFactoryBean factoryBean = new ShiroFilterFactoryBean();
         Map<String, Filter> filterMap = new HashMap<>();
         filterMap.put("jwt", new JwtFilter());
-        filterMap.put("auth", new AuthFilter());
+//        filterMap.put("auth", new AuthFilter());
         factoryBean.setFilters(filterMap);
         factoryBean.setSecurityManager(securityManager);
         Map<String, String> filterRuleMap = new HashMap<>();
         //登陆相关api不需要被过滤器拦截
         filterRuleMap.put("/wx/user/*/login", "anon");
+        //swagger接口权限 开放
+        filterRuleMap.put("/swagger-ui.html", "anon");
+        filterRuleMap.put("/webjars/**", "anon");
+        filterRuleMap.put("/v2/**", "anon");
+        filterRuleMap.put("/swagger-resources/**", "anon");
+
         // 所有请求通过JWT Filter
-        filterRuleMap.put("/**", "jwt,auth");
+        filterRuleMap.put("/**", "jwt");
+//        filterRuleMap.put("/**", "jwt,auth");
         factoryBean.setFilterChainDefinitionMap(filterRuleMap);
         return factoryBean;
     }

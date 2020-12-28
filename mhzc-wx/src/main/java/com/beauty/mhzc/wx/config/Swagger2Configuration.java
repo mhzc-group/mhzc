@@ -1,4 +1,4 @@
-package com.beauty.mhzc.admin.config;
+package com.beauty.mhzc.wx.config;
 
 import com.github.xiaoymin.swaggerbootstrapui.annotations.EnableSwaggerBootstrapUI;
 import org.springframework.context.annotation.Bean;
@@ -19,23 +19,23 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 @EnableSwagger2
 @EnableSwaggerBootstrapUI
-public class AdminSwagger2Configuration {
+public class Swagger2Configuration {
     @Bean
-    public Docket adminDocket() {
+    public Docket wxDocket() {
 
         return new Docket(DocumentationType.SWAGGER_2)
-                .groupName("admin")
-                .apiInfo(adminApiInfo())
+                .groupName("wx")
+                .apiInfo(wxInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.beauty.mhzc.admin.web"))
+                .apis(RequestHandlerSelectors.basePackage("com.beauty.mhzc.wx.controller"))
                 .paths(PathSelectors.any())
                 .build();
     }
 
-    private ApiInfo adminApiInfo() {
+    private ApiInfo wxInfo() {
         return new ApiInfoBuilder()
-                .title("mhzc-admin API")
-                .description("mhzc管理后台API")
+                .title("mhzc-wx API")
+                .description("WX-API")
                 .version("1.0")
                 .build();
     }

@@ -1,17 +1,20 @@
-package com.beauty.mhzc.controller;
+package com.beauty.mhzc.wx.controller;
 
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
-import com.beauty.mhzc.config.JwtConfig;
-import com.beauty.mhzc.config.WxMaConfiguration;
-import com.beauty.mhzc.db.domain.User;
 import com.beauty.mhzc.db.service.UserService;
-import com.beauty.mhzc.utils.ResponseUtil;
+import com.beauty.mhzc.wx.config.JwtConfig;
+import com.beauty.mhzc.wx.config.WxMaConfiguration;
+import com.beauty.mhzc.db.domain.User;
+
+import com.beauty.mhzc.wx.utils.ResponseUtil;
+import io.swagger.annotations.Api;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,11 +34,13 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("/wx/user/{appId}")
+@Api(value = "用户登陆与信息获取",tags = "用户登陆与信息获取")
 public class WxAppletLoginController {
-    @Resource
+
+    @Autowired
     private UserService userService;
 
-    @Resource
+    @Autowired
     private JwtConfig jwtConfig;
 
     /**

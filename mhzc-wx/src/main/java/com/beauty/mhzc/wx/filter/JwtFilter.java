@@ -1,7 +1,7 @@
-package com.beauty.mhzc.filter;
+package com.beauty.mhzc.wx.filter;
 
 
-import com.beauty.mhzc.vo.JwtToken;
+import com.beauty.mhzc.wx.vo.JwtToken;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.subject.Subject;

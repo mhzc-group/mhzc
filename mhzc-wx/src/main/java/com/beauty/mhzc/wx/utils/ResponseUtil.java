@@ -1,6 +1,5 @@
-package com.beauty.mhzc.utils;
+package com.beauty.mhzc.wx.utils;
 
-import com.beauty.mhzc.db.enums.ResultEnum;
 import com.github.pagehelper.Page;
 import lombok.Builder;
 import org.springframework.http.HttpStatus;

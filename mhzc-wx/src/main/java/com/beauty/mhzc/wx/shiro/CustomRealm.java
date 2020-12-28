@@ -1,8 +1,8 @@
-package com.beauty.mhzc.shiro;
+package com.beauty.mhzc.wx.shiro;
 
 
-import com.beauty.mhzc.config.JwtConfig;
-import com.beauty.mhzc.vo.JwtToken;
+import com.beauty.mhzc.wx.config.JwtConfig;
+import com.beauty.mhzc.wx.vo.JwtToken;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;

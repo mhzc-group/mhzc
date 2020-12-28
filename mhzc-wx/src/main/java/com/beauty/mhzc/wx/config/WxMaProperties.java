@@ -1,4 +1,4 @@
-package com.beauty.mhzc.config;
+package com.beauty.mhzc.wx.config;
 
 import java.util.List;
 
