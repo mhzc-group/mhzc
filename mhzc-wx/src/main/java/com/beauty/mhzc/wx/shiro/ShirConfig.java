@@ -1,7 +1,6 @@
 package com.beauty.mhzc.wx.shiro;
 
 
-import com.beauty.mhzc.wx.filter.AuthFilter;
 import com.beauty.mhzc.wx.filter.JwtFilter;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;
@@ -59,11 +58,12 @@ public class ShirConfig {
         Map<String, String> filterRuleMap = new HashMap<>();
         //登陆相关api不需要被过滤器拦截
         filterRuleMap.put("/wx/user/*/login", "anon");
+
         //swagger接口权限 开放
-        filterRuleMap.put("/swagger-ui.html", "anon");
-        filterRuleMap.put("/webjars/**", "anon");
-        filterRuleMap.put("/v2/**", "anon");
-        filterRuleMap.put("/swagger-resources/**", "anon");
+        filterRuleMap.put("/swagger-ui/**", "anon");
+        filterRuleMap.put("/v3/**", "anon");
+        filterRuleMap.put("/doc/**", "anon");
+
 
         // 所有请求通过JWT Filter
         filterRuleMap.put("/**", "jwt");

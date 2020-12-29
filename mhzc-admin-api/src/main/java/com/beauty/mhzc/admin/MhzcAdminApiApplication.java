@@ -8,9 +8,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication(scanBasePackages = {"com.beauty.mhzc.db", "com.beauty.mhzc.core",
         "com.beauty.mhzc.admin"})
-@MapperScan("com.beauty.mhzc.db.dao")
-@EnableTransactionManagement
-@EnableScheduling
+//@MapperScan("com.beauty.mhzc.db.dao")
+//@EnableTransactionManagement
+//@EnableScheduling
 public class MhzcAdminApiApplication {
 
     public static void main(String[] args) {

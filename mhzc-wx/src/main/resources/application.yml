@@ -32,5 +32,21 @@ wx:
         aesKey: #微信小程序消息服务器配置的EncodingAESKey
         msgDataFormat: JSON
 
-#swagger:
-#  production: true
+springdoc:
+  swagger-ui:
+    path: /doc/swagger-ui.html
+    enabled: true
+  packages-to-scan: com.beauty.mhzc.wx.controller
+  paths-to-match: /**
+  api-docs:
+    path: /doc/api
+    enabled: true
+#  show-actuator: true
+#  use-management-port: true
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        includ: openapi, swaggerui
+#  server:
+#    port=9090:

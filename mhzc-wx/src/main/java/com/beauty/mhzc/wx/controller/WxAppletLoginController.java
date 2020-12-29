@@ -4,13 +4,20 @@ import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
-import com.beauty.mhzc.db.service.UserService;
 import com.beauty.mhzc.wx.config.JwtConfig;
 import com.beauty.mhzc.wx.config.WxMaConfiguration;
+import com.beauty.mhzc.wx.utils.ResponseUtil;
+import com.beauty.mhzc.db.service.UserService;
 import com.beauty.mhzc.db.domain.User;
 
-import com.beauty.mhzc.wx.utils.ResponseUtil;
-import io.swagger.annotations.Api;
+//import io.swagger.v3.oas.annotations.tags.Tag;
+//import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.enums.ParameterStyle;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -18,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -34,7 +40,7 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("/wx/user/{appId}")
-@Api(value = "用户登陆与信息获取",tags = "用户登陆与信息获取")
+@Tag(name = "微信登陆与用户信息获取")
 public class WxAppletLoginController {
 
     @Autowired
@@ -47,6 +53,10 @@ public class WxAppletLoginController {
      * 微信小程序端用户登陆api
      * 返回给小程序端 自定义登陆态 token
      */
+    @Operation(summary = "微信小程序端用户登陆", description = "返回给小程序端 token")
+    @Parameters({
+            @Parameter(name = "code",description = "小程序返回code",required=true,in = ParameterIn.QUERY)
+    })
     @PostMapping("/login")
     public Object wxAppletLoginApi(@PathVariable String appId, String code) {
         final WxMaService wxService = WxMaConfiguration.getMaService(appId);
@@ -106,7 +116,7 @@ public class WxAppletLoginController {
         }
         // 解密用户信息
         WxMaUserInfo userInfo = wxService.getUserService().getUserInfo(sessionKey, encryptedData, iv);
-
+        //todo 用户信息存储数据库
         return  ResponseUtil.ok(userInfo);
     }
 
@@ -134,16 +144,16 @@ public class WxAppletLoginController {
 
         // 解密
         WxMaPhoneNumberInfo phoneNoInfo = wxService.getUserService().getPhoneNoInfo(sessionKey, encryptedData, iv);
+        //todo 用户信息存储数据库
 
         return  ResponseUtil.ok(phoneNoInfo);
     }
 
 
-    @PostMapping("/sayHello")
-    public Object sayHello() {
-        Map<String, String> result = new HashMap<>();
-        result.put("words", "hello World");
-        return ResponseUtil.ok(result);
+
+    @GetMapping("/test")
+    public Objects test(){
+        return null;
     }
 
     public static void main(String[] args) throws UnsupportedEncodingException {

@@ -7,6 +7,7 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authz.AuthorizationException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -31,4 +32,10 @@ public class ShiroExceptionHandler {
         return ResponseUtil.unauthz();
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseBody
+    public Object illegalArgumentException(IllegalArgumentException e) {
+        logger.warn(e.getMessage(), e);
+        return ResponseUtil.fail(HttpStatus.INTERNAL_SERVER_ERROR.value(),e.getMessage());
+    }
 }
